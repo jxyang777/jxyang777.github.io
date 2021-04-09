@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>donating system</title>
+    <link rel="stylesheet" href="mysystem.css">
+    
+</head>
+
+<body>
+    <div id="title">
+        <h1>SendTransaction</h1>
+    </div>
+
+    <div class="box">
+	<form onsubmit="alert('表單送出');">
+	<label for="address">Account</label>
+	<br>
+	<input type="text" required pattern="[0-9a-zA-Z]{42,}" id="account" name="account" placeholder="EX:0x5FC953397D6060E157d718eC64822dCe1314eC44" name="帳號">
+	<span class="ok">ok</span>
+	<br>
+	<label for="money" class="col-lg-2 control-label">金額</label>
+	<br>
+	<input type="money" required pattern="[0-9]" name="money" id="money" name="金額">
+	<span class="ok">ok</span>
+	<br>
+	</form>
+	<br>
+    <button onclick="" id="send">Send</button>
+    </div>
+
+    <div>
+        <p id="TransactionHash"></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="web3_init.js"></script>
+</body>
+</html>
