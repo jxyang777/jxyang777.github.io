@@ -24,6 +24,6 @@ window.addEventListener("load", start); */
 
 
 function send() {
-    var tranHash = eth.sendTransaction({ from: $("#address").val() , gas:$("#money").val() });
+    var tranHash = web3.eth.sendTransaction({ from: $("#address").val() , gas:$("#money").val() });
     document.querySelector("#TransactionHash").innerHTML = "Transaction Hash: " + tranHash;
 };
