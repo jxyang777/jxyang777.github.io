@@ -6,6 +6,7 @@
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <title>donating system</title>
     <link rel="stylesheet" href="mysystem.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
 </head>
 
@@ -23,12 +24,12 @@
 	<br>
 	<label for="money" class="col-lg-2 control-label">金額</label>
 	<br>
-	<input type="money" required pattern="[0-9]" name="money" id="money" name="金額">
+	<input type="text" required pattern="[0-9]" name="money" id="money" name="金額">
 	<span class="ok">ok</span>
 	<br>
 	</form>
 	<br>
-    <button onclick="" id="send">Send</button>
+    <button type="button" onclick="send()">Send</button>
     </div>
 
     <div>
