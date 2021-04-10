@@ -9,9 +9,13 @@ else {
 
 
 async function send() {
-    let defaultAccount = await web3.eth.getCoinbase();
-    let toAccount = $("#address").val();
-    let value = $("#money").val();
-    var tranHash = web3.eth.sendTransaction({ from: defaultAccount , to:toAccount, gas: value});
-    document.querySelector("#TransactionHash").innerHTML = "Transaction Hash: " + tranHash;
+    try {
+        let defaultAccount = await web3.eth.getCoinbase();
+        let toAccount = $("#address").val();
+        let value = $("#money").val();
+        var tranHash = web3.eth.sendTransaction({ from: defaultAccount , to:toAccount, gas: value});
+        document.querySelector("#TransactionHash").innerHTML = "Transaction Hash: " + tranHash;
+    } catch(err) {
+        console.error("Error:", err);
+    }
 };
