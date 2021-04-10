@@ -23,7 +23,10 @@ else {
 window.addEventListener("load", start); */
 
 
-function send() {
-    var tranHash = web3.eth.sendTransaction({ from: $("#address").val() , gas:$("#money").val() });
+async function send() {
+    let defaultAccount = await web3.eth.getCoinbase();
+    let account = $("#address").val();
+    let gas = $("#money").val();
+    var tranHash = web3.eth.sendTransaction({ from: defaultAccount , to:account, gas: gas});
     document.querySelector("#TransactionHash").innerHTML = "Transaction Hash: " + tranHash;
 };
