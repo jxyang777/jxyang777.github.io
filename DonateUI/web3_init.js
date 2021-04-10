@@ -19,6 +19,6 @@ async function start() {
     } catch(err) {
         console.error("Error:", err);
     }
-    }
+}
 
 window.addEventListener("load", start);
