@@ -1,6 +1,6 @@
 if (window.ethereum) {
     web3 = new Web3(window.ethereum);
-    window.ethereum.enable();
+    // window.ethereum.enable();
 }
 else {
     web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.50.75:8545"));
