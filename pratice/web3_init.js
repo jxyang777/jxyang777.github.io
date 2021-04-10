@@ -8,7 +8,7 @@ else {
 
 
 
-async function send() {
+/* async function send() {
     try {
         let defaultAccount = await web3.eth.getCoinbase();
         let toAccount = $("#address").val();
@@ -18,7 +18,7 @@ async function send() {
     } catch(err) {
         console.error("Error:", err);
     }
-};
+}; */
 
 async function start() {
     try {
