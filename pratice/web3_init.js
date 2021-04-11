@@ -23,11 +23,8 @@ async function start() {
 }
 window.addEventListener("load", start);
 
-// let accepterAddr = "";
-let amount = 20;
 $("#send").click(function () {
     let accepterAddr = $("#address").val();
-    amount = web3.utils.toWei($("#money").val());
-    
+    let amount = web3.utils.toWei($("#money").val());
     var hash = web3.eth.sendTransaction({ from:defaultAccount , to:accepterAddr, value:amount});
 });
