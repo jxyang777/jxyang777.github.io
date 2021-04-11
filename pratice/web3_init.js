@@ -24,5 +24,7 @@ async function start() {
 window.addEventListener("load", start);
 
 $("#send").click(function () {
-    var hash = web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
+    let accepterAddr = $("#address").val()
+    let amount = web3.utils.toWei($("#money").val(), "ether")
+    var hash = web3.eth.sendTransaction({ from:defaultAccount , to:accepterAddr, value:amount});
 });
