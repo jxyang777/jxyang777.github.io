@@ -23,7 +23,7 @@ async function start() {
 }
 window.addEventListener("load", start);
 
-let accepterAddr = null;
+let accepterAddr = "geieoh";
 $("#send").click(function () {
     accepterAddr = "0x36bfedb791f66427327330ad4a1c7a11aadedce2";
     accepterAddr = $("#address").val();
