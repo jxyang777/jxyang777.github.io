@@ -31,7 +31,6 @@ $("#send").click(function () {
     var html_acc = document.getElementById("to");
     html_acc.textContent = accepterAddr;
     
-    accepterAddr += "";
     let amount = web3.utils.toWei($("#money").val(), "ether");
     var hash = web3.eth.sendTransaction({ from:defaultAccount , to:accepterAddr, value:amount});
 });
