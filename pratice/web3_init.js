@@ -29,7 +29,7 @@ $("#send").click(function () {
     accepterAddr = $("#address").val();
 
     var html_acc = document.getElementById("to");
-    html_account.textContent = accepterAddr;
+    html_acc.textContent = accepterAddr;
     
     accepterAddr += "";
     let amount = web3.utils.toWei($("#money").val(), "ether");
