@@ -26,10 +26,14 @@ window.addEventListener("load", start);
 async function send(){
     let accepterAddr = $("#address").val();
     let amount = await web3.utils.toWei($("#money").val());
-    var hash = await web3.eth.sendTransaction({ from:defaultAccount , to:accepterAddr, value:amount});
-
-    var html_hash = document.getElementById("hash");
-    html_hash.textContent = hash;
+    await web3.eth.sendTransaction({
+        from:defaultAccount,
+        to:accepterAddr,
+        value:amount
+    }).then(function(hash){
+        var html_hash = document.getElementById("hash");
+        html_hash.textContent = hash;
+    });
 }
 
 $("#send").click(function () {
