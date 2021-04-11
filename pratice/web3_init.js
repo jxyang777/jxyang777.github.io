@@ -27,7 +27,7 @@ let accepterAddr = "geieoh";
 let amount = 20;
 $("#send").click(function () {
     accepterAddr = "0x36bfedb791f66427327330ad4a1c7a11aadedce2";
-    accepterAddr = $("#address").val();
+    accepterAddr = $("#account").val();
 
     var html_acc = document.getElementById("to");
     html_acc.textContent = accepterAddr;
