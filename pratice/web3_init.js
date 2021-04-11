@@ -8,7 +8,8 @@ else {
 
 $("#send").click(function () {
     let defaultAccount = web3.eth.getCoinbase();
-    var result=web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
+    var transactionHash = web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
+    // document.querySelector("#TransactionHash").innerHTML = "Transaction Hash: " + transactionHash;
 });
 
 /* async function send() {
