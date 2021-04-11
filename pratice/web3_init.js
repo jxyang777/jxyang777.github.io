@@ -24,5 +24,5 @@ window.addEventListener("load", start);
 
 $("#send").click(function () {
     let myAccount = web3.eth.getCoinbase();
-    let result = web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
+    let result = web3.eth.sendTransaction({ from:myAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
 });
