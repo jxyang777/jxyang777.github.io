@@ -27,7 +27,7 @@ let accepterAddr = 20;
 let amount = 20;
 $("#send").click(function () {
     // accepterAddr = "0x36bfedb791f66427327330ad4a1c7a11aadedce2";
-    accepterAddr = $("#account").val();
+    accepterAddr = $("#address").val();
     amount = $("#money").val();
     
     // var hash = web3.eth.sendTransaction({ from:defaultAccount , to:accepterAddr, value:amount});
