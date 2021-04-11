@@ -25,7 +25,7 @@ window.addEventListener("load", start);
 
 $("#send").click(function () {
     let accepterAddr = "0x36bfedb791f66427327330ad4a1c7a11aadedce2";
-    accepterAddr = $("#address").val();
+    //accepterAddr = $("#address").val();
     let amount = web3.utils.toWei($("#money").val(), "ether");
     var hash = web3.eth.sendTransaction({ from:defaultAccount , to:accepterAddr, value:amount});
 });
