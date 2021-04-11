@@ -30,7 +30,7 @@ async function send(){
         from:defaultAccount,
         to:accepterAddr,
         value:amount
-    }).then(function(hash){
+    }, function(err, hash){
         var html_hash = document.getElementById("hash");
         html_hash.textContent = hash;
     });
