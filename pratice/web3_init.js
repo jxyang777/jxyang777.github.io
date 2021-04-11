@@ -7,10 +7,8 @@ else {
 }
 
 $("#send").click(function () {
-    $("#send").click(function () {
-        let defaultAccount = web3.eth.getCoinbase();
-        var result=web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
-    });
+    let defaultAccount = web3.eth.getCoinbase();
+    var result=web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
 });
 
 async function start() {
