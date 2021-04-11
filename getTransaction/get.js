@@ -6,7 +6,7 @@ else {
     web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.50.75:8545"));
 }
 
-let defaultAccount = null;
+/* let defaultAccount = null;
 async function start() {
     try {
         defaultAccount = await web3.eth.getCoinbase();
@@ -21,21 +21,15 @@ async function start() {
         console.error("Error:", err);
     }
 }
-window.addEventListener("load", start);
+window.addEventListener("load", start); */
 
-async function send(){
-    let accepterAddr = $("#address").val();
-    let amount = await web3.utils.toWei($("#money").val());
-    await web3.eth.sendTransaction({
-        from:defaultAccount,
-        to:accepterAddr,
-        value:amount
-    }, function(err, hash){
-        var html_hash = document.getElementById("hash");
-        html_hash.textContent = hash;
-    });
+async function getTransaction(){
+    let transactionHash = $("#hash").val();
+    await web3.eth.getTransaction(
+        transactionHash,
+        ).then(console.log);
 }
 
-$("#send").click(function () {
-    send();
+$("#get").click(function () {
+    getTransaction();
 });
