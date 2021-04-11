@@ -7,22 +7,9 @@ else {
 }
 
 $("#send").click(function () {
-    let defaultAccount = web3.eth.getCoinbase();
-    /* var transactionHash =  */web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
-    // document.querySelector("#TransactionHash").innerHTML = "Transaction Hash: " + transactionHash;
+    let myaccount = web3.eth.getCoinbase();
+    web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
 });
-
-/* async function send() {
-    try {
-        let defaultAccount = await web3.eth.getCoinbase();
-        let toAccount = $("#address").val();
-        let value = $("#money").val();
-        var tranHash = web3.eth.sendTransaction({ from: defaultAccount , to:toAccount, gas: value});
-        document.querySelector("#TransactionHash").innerHTML = "Transaction Hash: " + tranHash;
-    } catch(err) {
-        console.error("Error:", err);
-    }
-}; */
 
 async function start() {
     try {
