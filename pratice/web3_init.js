@@ -7,8 +7,12 @@ else {
 }
 
 $("#send").click(function () {
-    let myaccount = web3.eth.getCoinbase();
-    web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
+    try{
+        let myaccount = web3.eth.getCoinbase();
+        web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
+    } catch(err) {
+        console.error("Error:", err);
+    }
 });
 
 async function start() {
