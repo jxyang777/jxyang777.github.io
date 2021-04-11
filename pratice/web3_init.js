@@ -6,9 +6,10 @@ else {
     web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.50.75:8545"));
 }
 
+let defaultAccount = null;
 async function start() {
     try {
-        let defaultAccount = await web3.eth.getCoinbase();
+        defaultAccount = await web3.eth.getCoinbase();
         // let defaultAccount = "0xB31BFC1a6DE8a0228070263CD697E989c1838d71";
         let balance = await web3.eth.getBalance(defaultAccount);
 
@@ -23,6 +24,5 @@ async function start() {
 window.addEventListener("load", start);
 
 $("#send").click(function () {
-    let myAccount = web3.eth.getCoinbase();
-    let result = web3.eth.sendTransaction({ from:myAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
+    var hash = web3.eth.sendTransaction({ from:defaultAccount , to:"0x36bfedb791f66427327330ad4a1c7a11aadedce2", value:50 });
 });
