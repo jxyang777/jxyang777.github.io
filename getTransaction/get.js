@@ -25,9 +25,13 @@ window.addEventListener("load", start); */
 
 async function getTransaction(){
     let transactionHash = $("#hash").val();
-    await web3.eth.getTransaction(
-        transactionHash,
-        ).then(console.log);
+    let blockNumber;
+    await web3.eth.getTransaction(transactionHash)
+        .then(function(obj){
+            blockNumber = obj.blockNumber;
+        });
+    var html_blockNumber = document.getElementById("blockNumber");
+    html_blockNumber.textContent = blockNumber;
 }
 
 $("#get").click(function () {
