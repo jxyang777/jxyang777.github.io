@@ -1,0 +1,87 @@
+body{
+    margin-top:0px;
+    margin-left:auto;
+    margin-right:auto;
+    font-size:20px;
+    font-family:"微軟正黑體";
+    background-color:#DDBEA9;
+    text-align:center;
+    color:#743A3A;
+    padding:0px;
+}
+.head1{
+    margin-top:50px;
+    width:600px;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:#CB997E;
+    color:white;
+    font-weight:bold;
+    font-size:25px;
+    text-align:center;
+    padding:20px;
+}
+button{
+    font-size:15px;
+    background:white;
+    border:2px solid black;
+}
+input{
+    border:2px solid black;
+    font-size:15px;
+}
+.box{
+    margin-top:0px;
+    width:600px;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:#FFE8D6;
+    padding:20px;
+}
+.button1 {
+    padding: 5px 15px;
+    background-color:#CB997E ;
+    border: 0 none;
+    cursor: pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    color:white;
+    font-size:15px;
+    
+}
+button{
+    font-size:15px;
+    background-color:white;
+    border:3px solid #CB997E;
+    color:#743A3A;
+}
+a{
+    color:white;
+}
+form{
+
+line-height: 2em;
+}
+
+
+form>.ok{
+color: rgb(47, 26, 139);
+}
+
+form>input:valid+.ok{
+
+display: inline;
+
+}
+
+
+form>input:invalid+.ok{
+
+display: none;
+
+}
+  
+#jstext{
+    text-align:center;
+    color:#743A3A;
+}
