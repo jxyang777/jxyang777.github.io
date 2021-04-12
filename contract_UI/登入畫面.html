@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <meta charset="utf-8">
+  <link href='doc.css' rel='stylesheet' type='text/css'>
+  
+  </meta>
+  <title>SignUp</title>
+  <style type="text/css">
+      body{margin-top:0px;
+          margin-left:auto;
+          margin-right:auto;
+          font-size:20px;
+          font-family:"微軟正黑體";
+          background-color:#DDBEA9;
+          text-align:center;
+          color:#743A3A;
+          font-weight:bold;
+          padding:0px;}
+    .head
+        {margin-top:50px;
+            width:600px;
+            margin-left:auto;
+            margin-right:auto;
+            background-color:#CB997E;
+            color:white;
+            font-weight:bold;
+            font-size:25px;
+            text-align:center;
+            padding:20px;}
+    .box{margin-top:0px;
+		text-align:center;
+        width:600px;
+        margin-left:auto;
+        margin-right:auto;
+        background-color:#FFE8D6;
+        padding:20px;}
+        
+  button{font-size:15px;
+      background-color:white;
+      border:3px solid #CB997E;
+      color:#743A3A;
+	  text-align:center;
+	  margin:0 auto;
+  }
+
+    input[type="submit"] {
+      padding: 5px 15px;
+      background: #ccc;
+      border: 0 none;
+      cursor: pointer;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+	  text-align:center;
+	  margin:0 auto;
+    }
+
+    input[type="text"] {
+      padding: 5px 15px;
+      border: 2px black solid;
+      cursor: pointer;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+	  text-align:center;
+	  margin:0 auto;
+    }
+
+    input[type="password"] {
+      padding: 5px 15px;
+      border: 2px black solid;
+      cursor: pointer;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+	  margin:0 auto;
+    }
+
+    input[type="number"] {
+      padding: 5px 15px;
+      border: 2px black solid;
+      cursor: pointer;
+      -webkit-border-radius: 10px;
+      border-radius: 5px;
+      width: 170px;
+	  text-align:center;
+	  margin:0 auto;
+    }
+  .button1 {
+      padding: 5px 15px;
+      background-color:#CB997E ;
+      border: 0 none;
+      cursor: pointer;
+      -webkit-border-radius: 5px;
+      border-radius: 5px;
+      color:white;
+      font-size:15px;
+	  text-align:center;
+      
+  }
+a{color:white;text-align:center;}
+
+form{
+      
+      line-height: 2em;
+    }
+    
+
+  form>.ok{
+    color: rgb(47, 26, 139);
+}
+
+ form>input:valid+.ok{
+
+  display: inline;
+
+}
+
+
+form>input:invalid+.ok{
+
+display: none;
+
+}
+		
+  </style>
+</head>
+<body >
+	
+
+
+<label id="head_donor" class="head">Donor</label>
+<label id="head_fundraiser" class="head">Fundraiser</label>
+<label id="head_payee" class="head">Payee</label>
+<div class="box" style="text-align: center;">
+<form onsubmit="alert('表單送出');">
+<label id="head_login" style="font-size: 30px;color:#743A3A;padding: 20px;">登入</label>
+<br/>
+<br/>
+<label id="_address"  name="address">My Address</label>
+<br/>
+<input id="address" required pattern="[0-9a-zA-Z]{42,}" type="text" placeholder="EX:0x5FC953397D6060E157d718eC64822dCe1314eC44">
+<span class="ok" id="okok">ok</span>
+<br/>
+<label id="_password" >password</label>
+<br/>
+<input type="password"  required  id="password" type="text" placeholder="請輸入密碼">
+<span class="ok" id="okok1">ok</span>
+<br/>
+<button id="verify" style="font-size:10px">驗證帳密</button>
+<br/>
+<br/>
+<div class="box1">
+<label id="_fundraiser" class="col-lg-2 control-label">fundraiser</label>
+<br/>
+<input id="fundraiser" type="text" required pattern="[0-9a-zA-Z]{42,}" placeholder="請輸入募款人的address" class="input">
+<br/>
+<label id="_payee">payee</label>
+<br>
+<input id="payee" type="text" required pattern="[0-9a-zA-Z]{42,}" placeholder="請輸入受款人的address">
+<br>
+<label id="_value" class="col-lg-2 control-label">value</label>
+<br/>
+<input id="value" type="number"   placeholder="請輸入金額(單位為ether)"   step="any">
+</form>
+<br/>
+<br/>
+
+<button id="showFunOrPayeeInfo" >查看此募款人基本資料</button>
+<button id="donate" >捐款給此募款人</button>
+<button id="getBuyList" >查看此募款人金流</button>
+<button id="getTotalValue">查看此募款人募到的總額</button>
+<button id="search" >查詢捐了多少錢給此募款人</button>
+<button id="searchMyValue" >查詢自己捐給此募款人的金流</button>
+
+<button id="buy">匯款給此payee</button>
+<button id="getDonorList">查看捐款者名單</button>
+</div>
+<br/>
+<br/>
+
+
+<button onclick="history.back()" class="button1"><a href="申請.html">Back</a></button>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script >
+
+  if (typeof web3 !== 'undefined') {
+    web3 = new Web3(web3.currentProvider);
+  }
+  else {
+    // set the provider you want from Web3.providers
+    web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+  }
+
+
+
+
+  var infoContract = new web3.eth.Contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "donate",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"name": "_phoneNumber",
+				"type": "string"
+			},
+			{
+				"name": "_email",
+				"type": "string"
+			}
+		],
+		"name": "signUpFundraiser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "searchMyValue",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			},
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "getBuyList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			},
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getDonorList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "signUpDonor",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"name": "_phoneNumber",
+				"type": "string"
+			},
+			{
+				"name": "_email",
+				"type": "string"
+			}
+		],
+		"name": "signUpPayee",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "search",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "getTotalValue",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "fundraiserList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "payeeList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "verify",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "donorList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_funOrPayee",
+				"type": "address"
+			}
+		],
+		"name": "showFunOrPayeeInfo",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_payee",
+				"type": "address"
+			}
+		],
+		"name": "buy",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	}
+], '0xd9722598d0BdDF533eA486808f518A26035F1AaB');
+
+
+function donorHidden(){
+	document.getElementById("head_donor").style.display="none";
+	document.getElementById("fundraiser").style.display="none";
+	document.getElementById("value").style.display="none";
+	document.getElementById("_fundraiser").style.display="none";
+	document.getElementById("_value").style.display="none";
+	document.getElementById("donate").style.display="none";
+	document.getElementById("getBuyList").style.display="none";
+	document.getElementById("getTotalValue").style.display="none";
+	document.getElementById("search").style.display="none";
+	document.getElementById("searchMyValue").style.display="none";
+	document.getElementById("showFunOrPayeeInfo").style.display="none";
+	
+}
+function fundraiserHidden(){
+	document.getElementById("head_fundraiser").style.display="none";
+	document.getElementById("_payee").style.display="none";
+	document.getElementById("payee").style.display="none";
+	document.getElementById("buy").style.display="none";
+	document.getElementById("getDonorList").style.display="none";
+}
+function payeeHidden(){
+	document.getElementById("head_payee").style.display="none";
+}
+
+donorHidden();
+fundraiserHidden();
+payeeHidden();
+function donorShow(){
+	document.getElementById("head_donor").style.display="block";
+	document.getElementById("donate").style.display="block";
+	document.getElementById("getBuyList").style.display="block";
+	document.getElementById("getTotalValue").style.display="block";
+	document.getElementById("search").style.display="block";
+	document.getElementById("searchMyValue").style.display="block";
+	document.getElementById("showFunOrPayeeInfo").style.display="block";
+	document.getElementById("_fundraiser").style.display="block";
+	document.getElementById("_value").style.display="block";
+	document.getElementById("fundraiser").style.display="block";
+	document.getElementById("value").style.display="block";
+	document.getElementById("head_login").style.display="none";
+	
+	
+	
+	
+}
+function fundraiserShow(){
+	document.getElementById("head_fundraiser").style.display="block";
+	document.getElementById("_payee").style.display="block";
+	document.getElementById("payee").style.display="block";
+	document.getElementById("_value").style.display="block";
+	document.getElementById("value").style.display="block";
+	document.getElementById("buy").style.display="block";
+	document.getElementById("getDonorList").style.display="block";
+    document.getElementById("head_login").style.display="none";
+}
+function payeeShow(){
+	document.getElementById("head_payee").style.display="block";
+    document.getElementById("head_login").style.display="none";
+}
+function accountAndPassword(){
+	document.getElementById("address").style.display="none";
+	document.getElementById("password").style.display="none";
+	document.getElementById("_address").style.display="none";
+	document.getElementById("_password").style.display="none";
+	document.getElementById("verify").style.display="none";
+    document.getElementById("head_login").style.display="none";
+}
+
+ //下列為donor的function
+$("#donate").click(function () {
+ 	var result=infoContract.methods.donate($("#fundraiser").val()).send({ from: $(" #address").val(), value: ($("#value").val())*Math.pow(10,18), gas: 5000000 });
+	 result.catch(err=>{
+				alert("捐款失敗!" + err);
+				
+	})
+	result.then(function(){
+		alert("捐款成功!");
+	})
+			 
+
+});
+$("#getBuyList").click(function () {
+    var result = infoContract.methods.getBuyList($("#fundraiser").val()).call();
+	result.then(function(value){
+		//alert("此募款人的金流:"+JSON.stringify(value) );
+				document.body.appendChild(document.createElement('p'));
+				document.querySelector("body p:last-child").id="jstext";
+				document.querySelector("#jstext").innerHTML ="此募款人的金流:" + "<br>" +JSON.stringify(value)  ;
+				
+			})
+});
+$("#getTotalValue").click(function () {
+    var result = infoContract.methods.getTotalValue($("#fundraiser").val()).call();
+	result.then(function(value){
+				//document.write("此募款人募到的總額為:",value);
+                //alert("此募款人募到的總額為:"+ value/Math.pow(10,18)+ "  ether");
+				document.body.appendChild(document.createElement('p'));
+				document.querySelector("body p:last-child").id="jstext";
+				document.querySelector("#jstext").innerHTML ="此募款人募到的總額為:" + "<br>" +value/Math.pow(10,18)+ "  ether" ;
+				
+	})
+				
+})  
+
+$("#search").click(function () {
+    var result = infoContract.methods.search($("#fundraiser").val()).call({ from: $("#address").val() });
+	result.then(function(value){
+				//document.write("我共捐了:",value);
+                //alert("我共捐了:"+value/Math.pow(10,18)+ "  ether");
+				document.body.appendChild(document.createElement('p'));
+				document.querySelector("body p:last-child").id="jstext";
+				document.querySelector("#jstext").innerHTML ="我共捐了:"+"<br>"+value/Math.pow(10,18)+ "  ether";
+			})
+});
+$("#searchMyValue").click(function () {
+    var result = infoContract.methods.searchMyValue($("#fundraiser").val()).call({ from: $("#address").val() });
+	result.then(function(value){
+				//document.write("我捐給此募款人的金錢流向為:",JSON.stringify(value));
+                //alert("我捐給此募款人的金錢流向為:"+JSON.stringify(value) + "  ether");
+				document.body.appendChild(document.createElement('p'));
+				document.querySelector("body p:last-child").id="jstext";
+				document.querySelector("#jstext").innerHTML ="我捐給此募款人的金錢流向為:"+"<br>"+JSON.stringify(value) ;
+			})
+  });
+
+ $("#showFunOrPayeeInfo").click(function(){
+	var result=infoContract.methods.showFunOrPayeeInfo($("#fundraiser").val()).call();
+	result.then(function(value){
+				//document.write("此帳戶的資訊為:",JSON.stringify(value));
+                //alert("此帳戶的資訊為:"+JSON.stringify(value));
+				document.body.appendChild(document.createElement('p'));
+				document.querySelector("body p:last-child").id="jstext";
+				document.querySelector("#jstext").innerHTML ="此人的基本資料(名字/電話/EMAIL信箱):" + "<br>" +JSON.stringify(value)  ;
+			})
+ });
+
+
+
+ //下列為fundraiser的function
+ $("#buy").click(function () {
+    var result=infoContract.methods.buy($("#payee").val()).send({ from: $("#address").val(), value: ($("#value").val()) *Math.pow(10,18), gas: 5000000 });
+	result.catch(err=>{
+				alert("匯款失敗!" + err);
+				
+	})
+	result.then(function(){
+		alert("匯款成功!");
+	})
+  });
+
+  $("#getDonorList").click(function () {
+    var result = infoContract.methods.getDonorList().call({ from: $("#address").val() });
+	result.then(function(value){
+				//document.write("donorList:",value);
+                //alert("donorList:"+value);
+				document.body.appendChild(document.createElement('p'));
+				document.querySelector("body p:last-child").id="jstext";
+				document.querySelector("#jstext").innerHTML ="donorList:" + "<br>" +value  ;
+			})
+  });
+
+  
+//下列為三者共用的function(verify)
+$("#verify").click(function(){
+  	var result =infoContract.methods.verify($("#password").val()).call({from: $("#address").val()});
+	result.then(function(value){
+		
+		if(value =="donor"){
+			donorShow();
+			accountAndPassword();
+		
+		}
+		else if(value == "fundraiser"){
+			fundraiserShow();
+			accountAndPassword();
+		
+		}
+		else if(value == "payee"){
+			payeeShow();
+			accountAndPassword();
+
+		}
+		else if(value =="false"){
+			alert("Incorrect address or password.");
+		
+		}
+		document.getElementById("okok").style.display="none";
+		document.getElementById("okok1").style.display="none";
+		
+	})
+});
+
+</script>
+</div>
+
+</body>
+
+</html>
