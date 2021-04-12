@@ -25,13 +25,25 @@ window.addEventListener("load", start); */
 
 async function getTransaction(){
     let transactionHash = $("#hash").val();
-    let blockNumber;
+    let blockHash, blockNumber, from, to, value;
     await web3.eth.getTransaction(transactionHash)
         .then(function(obj){
+            blockHash = obj.blockHash;
             blockNumber = obj.blockNumber;
+            from = obj.from;
+            to = obj.to;
+            value = obj.value;
         });
-    var html_blockNumber = document.getElementById("blockNumber");
+    let html_blockHash = document.getElementById("blockHash");
+    let html_blockNumber = document.getElementById("blockNumber");
+    let html_from = document.getElementById("from");
+    let html_to = document.getElementById("to");
+    let html_value = document.getElementById("value");
+    html_blockHash.textContent = blockHash;
     html_blockNumber.textContent = blockNumber;
+    html_from.textContent = from;
+    html_to.textContent = to;
+    html_value.textContent = value;
 }
 
 $("#get").click(function () {
