@@ -645,8 +645,8 @@ $("#searchMyValue").click(function () {
 
   
 //下列為三者共用的function(verify)
-$("#verify").click(function(){
-  	var result =infoContract.methods.verify($("#password").val()).call({from: $("#address").val()});
+$("#verify").click(async function(){
+  	var result = await infoContract.methods.verify($("#password").val()).call({from: $("#address").val()});
 	result.then(function(value){
 		
 		if(value =="donor"){
