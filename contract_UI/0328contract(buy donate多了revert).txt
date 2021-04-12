@@ -1,0 +1,368 @@
+pragma solidity ^ 0.4.25;
+contract Donation{
+    
+    address [] donor ;
+    address [] fundraiser ;
+    address [] payee;
+    mapping(address => string)accountAndPassword;//一組address對應一組password
+    struct personalData{
+        string name;
+        string phoneNumber;
+        string email;
+        
+    }//紀錄fundraiser和payee的資料(實名制)
+    mapping(address =>personalData)personalInfo;
+    
+    function signUpDonor (string _password) public  {
+        for(uint i=0;i<fundraiser.length;i++){
+            if(msg.sender == fundraiser[i])
+                revert("You already signed up to be a fundraiser.");
+               
+            
+        }
+        for(uint j=0;j<payee.length;j++){
+            if(msg.sender == payee[j])
+                revert("You already signed up to be a payee.");
+                
+        }
+        for(uint x=0;x<donor.length;x++){
+            if(msg.sender == donor[x])
+                revert("You're already a donor.");
+               
+        }
+         
+         donor.push(msg.sender);
+         accountAndPassword[msg.sender]= _password;
+      
+    }
+    
+    function signUpFundraiser (string _password,string _name,string _phoneNumber,string _email) public {
+        for(uint i=0;i<donor.length;i++){
+            if(msg.sender == donor[i])
+                revert("You already signed up to be a donor.");
+                
+        }
+        for(uint j=0;j<payee.length;j++){
+            if(msg.sender == payee[j])
+                revert("You already signed up to be a payee.");
+                
+        }
+        for(uint x=0;x<fundraiser.length;x++){
+            if(msg.sender == fundraiser[x])
+                revert("You're already a fundraiser.");
+            
+                
+        }
+        fundraiser.push(msg.sender);
+        accountAndPassword[msg.sender]=_password;
+        personalInfo[msg.sender].name=_name;
+        personalInfo[msg.sender].phoneNumber=_phoneNumber;
+        personalInfo[msg.sender].email=_email;
+    }
+    
+    function signUpPayee (string _password,string _name,string _phoneNumber,string _email) public {
+        for(uint i=0;i<donor.length;i++){
+            if(msg.sender == donor[i])
+                revert("You already signed up to be a donor.");
+                
+        }
+        for(uint j=0;j<fundraiser.length;j++){
+            if(msg.sender == fundraiser[j])
+                revert("You already signed up to be a fundraiser.");
+              
+        }
+        for(uint x=0;x<payee.length;x++){
+            if(msg.sender == payee[x])
+                revert("You're already a payee.");
+        }
+                payee.push(msg.sender);
+                accountAndPassword[msg.sender]= _password;
+                 personalInfo[msg.sender].name=_name;
+                personalInfo[msg.sender].phoneNumber=_phoneNumber;
+                personalInfo[msg.sender].email=_email;
+        
+    }
+    
+    function donorList()public view returns(address []){
+        return donor;
+    }
+    
+    function fundraiserList()public view returns(address []){
+        return fundraiser;
+    }
+    
+    function payeeList()public view returns(address []){
+        return payee;
+    }
+    
+    function verify(string _password)public view returns(string){
+        if( keccak256(abi.encodePacked(accountAndPassword[msg.sender])) == keccak256(abi.encodePacked(_password))  ){
+            for(uint i=0;i<donor.length;i++)
+                if(msg.sender == donor[i]){
+                    return("donor");
+                    break;
+                }
+               
+            for(uint j=0;j<fundraiser.length;j++)
+                if(msg.sender == fundraiser[j]){
+                    return("fundraiser");
+                    break;
+                }
+            for(uint k=0;k<payee.length;k++)
+                if(msg.sender == payee[k]){
+                    return("payee");
+                    break;
+                }
+        }  
+        else
+            return("false");
+    }//驗證帳密是否匹配("false"表示帳密錯誤;若return"donor","fundraiser","payee"表示某身分驗證成功)
+    function showFunOrPayeeInfo(address _funOrPayee)public view returns(string,string,string){
+        return(personalInfo[_funOrPayee].name,personalInfo[_funOrPayee].phoneNumber,personalInfo[_funOrPayee].email);
+    }//查詢某fundraiser或payee的基本資料(實名制)
+    
+    struct DonorInfo{
+        address[]donors;//捐款人名單
+        mapping (address => uint) ledger;//紀錄每個捐款人捐了多少(記累積))
+        
+        address[]donorArray;//紀錄每一筆捐款人(記順序)
+        uint[]valueArray;//紀錄每一筆捐的金額(記順序))
+    }
+    mapping (address => DonorInfo)DonationHistory;//每一個募款人會對應到一組捐款資料(捐款人及金額)
+   
+    
+    function donate(address _fundraiser) public payable{
+        for(uint i=0;i<donor.length;i++){
+            if(msg.sender!=donor[i] && i==(donor.length)-1)
+                revert("User is not a donor.");//驗證身分
+            else if(msg.sender == donor[i])
+                break;
+            
+        }
+        require(msg.value>0,"Please send more than 0 ether.");//規定每次交易金額一定要大於0元
+        for(uint j=0;j<fundraiser.length;j++){
+            if(_fundraiser!=fundraiser[j] && j==(fundraiser.length)-1)
+                revert("please enter a fundraiser.");//驗證身分
+            else if(_fundraiser == fundraiser[j])
+                break;
+            
+        }
+        _fundraiser.transfer(msg.value);
+        DonationHistory[_fundraiser].donorArray.push(msg.sender);//紀錄捐款順序到陣列
+        DonationHistory[_fundraiser].valueArray.push(msg.value);//紀錄捐款順序到陣列
+        
+        if(DonationHistory[_fundraiser].ledger[msg.sender]==0){
+            DonationHistory[_fundraiser].donors.push(msg.sender);//如果是第一次捐 就加到捐款名單中
+        }
+        DonationHistory[_fundraiser].ledger[msg.sender]+=msg.value;//把捐的錢紀錄到捐款紀錄中(累積的)
+        
+    }//捐款人捐款給募款人
+    function getDonorList() public view returns (address[]){
+        for(uint i=0;i<fundraiser.length;i++){
+            if(msg.sender!=fundraiser[i] && i==(fundraiser.length)-1)
+                revert("User is not a fundraiser.");//驗證身分
+            else if(msg.sender == fundraiser[i])
+                break;
+            
+        }
+        return DonationHistory[msg.sender].donors;
+    }//募款人可查看捐款人名單
+   
+   /* function listDonorInfo()public{
+        for (uint i=0;i<DonationHistory[msg.sender].donors.length;i++){
+            address user=DonationHistory[msg.sender].donors[i];
+          
+        }
+    }//觸發event並紀錄到log中(包含受捐贈者的地址、每個捐款者的地址、捐款金額)
+    */    
+    function getTotalValue(address _fundraiser)public view returns(uint){
+        for(uint i=0;i<donor.length;i++){
+            if(msg.sender!=donor[i] && i==(donor.length)-1)
+                revert("User is not a donor.");//驗證身分
+            else if(msg.sender == donor[i])
+                break;
+            
+        }
+        for(uint j=0;j<fundraiser.length;j++){
+            if(_fundraiser!=fundraiser[j] && j==(fundraiser.length)-1)
+                revert("please enter a fundraiser.");//驗證身分
+            else if(_fundraiser == fundraiser[j])
+                break;
+            
+        }
+        uint sum=0;
+        for(uint k=0;k<DonationHistory[_fundraiser].donors.length;k++){
+            sum+=DonationHistory[_fundraiser].ledger[DonationHistory[_fundraiser].donors[k]];
+            
+           }
+        return sum;
+   } //捐款人查詢某募款人募到的總金額
+ 
+    struct BuyInfo{
+        address [] payee;//受款人名單
+        mapping(address => uint)value;//每一受款人對應到一筆金額
+        uint [] values;//購買金額的陣列順序對應到受款人名單的順序(金額是累積的記)
+        
+        uint [] valueArray;//每筆消費的紀錄(記順序))
+        address []payeeArray;//每筆payee的紀錄(記順序))
+    }
+    mapping (address=>BuyInfo)BuyHistory;//address為募款人
+    
+  /*function A(address x)public returns(uint){
+       return BuyHistory[msg.sender].value[x];
+   }募款人可以查總共跟某特定受款人買了多少錢*/
+    
+    function buy(address _payee)public payable {
+        for(uint i=0;i<fundraiser.length;i++){
+            if(msg.sender!=fundraiser[i] && i==(fundraiser.length)-1)
+                revert("User is not a fundraiser.");//驗證身分
+            else if(msg.sender == fundraiser[i])
+                break;
+            
+        }
+        require(msg.value>0,"Please send more than 0 ether.");//規定每次交易金額一定要大於0元
+        for(uint j=0;j<payee.length;j++){
+            if(_payee!=payee[j] && j==(payee.length)-1)
+                revert("please enter a payee.");//驗證身分
+            else if(_payee == payee[j])
+                break;                                                      
+            
+        }
+        _payee.transfer(msg.value);//轉錢過去
+        BuyHistory[msg.sender].valueArray.push(msg.value);//紀錄買的金額順序到陣列
+        BuyHistory[msg.sender].payeeArray.push(_payee);//紀錄受款人名單(記順序))
+        
+        if(BuyHistory[msg.sender].value[_payee]==0){
+            BuyHistory[msg.sender].payee.push(_payee);//如果是第一次向此受款人買   就把此受款人加到名單中
+            BuyHistory[msg.sender].values.push(0);//留一個位置給上述的受款人對應
+            
+        }
+            
+        BuyHistory[msg.sender].value[_payee]+=msg.value;//把購買的金額放到陣列中(記累積的錢)(目前contract沒有用到這個功能)
+        for(uint k=0;k<BuyHistory[msg.sender].payee.length;k++){
+            if(_payee == BuyHistory[msg.sender].payee[k])
+                BuyHistory[msg.sender].values[k]+=msg.value;//把購買的金額放到陣列中(記累積的錢)
+        }
+        
+        
+        uint m=msg.value;//令此次交易金額為m
+        for(uint d=0;m>0;d++){
+            if(DonationHistory[msg.sender].valueArray[d]>0){//判斷式:判斷捐款陣列(有順序的陣列)的第d筆金額是否大於0
+                
+                uint _length=(searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].payee.length;
+                
+                
+                    if(m<=DonationHistory[msg.sender].valueArray[d]){//判斷式:判斷此次交易金額是否小於或等於捐款陣列(有順序的陣列)的第d筆金額
+                        
+                        
+                            for(uint n=0;;n++){
+                                if(_length==0 ||((searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].payee[n]!=_payee)&&n==_length-1){
+                                    (searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].payee.push(_payee);//如果此受款人是第一次出現，就將他加入Search名單中
+                                    (searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].value.push(m);//把此交易金額紀錄到Serach金額陣列
+                                    break;
+                                }
+                                
+                                else if((searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].payee[n]==_payee){//如果此受款人曾經出現
+                                    
+                                    (searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].value[n]+=m;//把此交易金額累積加到Serach金額陣列
+                                    break;
+                                }
+                            }
+                                
+                            
+                         DonationHistory[msg.sender].valueArray[d]-=m;//把捐款金額(有順序的陣列)的第d筆扣掉這次交易的金額
+                         m=0;//把交易金額歸零 表示已經花完
+                    }
+                
+                
+                    else if(m>DonationHistory[msg.sender].valueArray[d]){
+                        
+                        for(uint x=0;;x++){
+                                if(_length==0 ||((searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].payee[x]!=_payee)&&x==_length-1){
+                                    (searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].payee.push(_payee);
+                                    (searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].value.push(DonationHistory[msg.sender].valueArray[d]);
+                                    break;
+                                }
+                                
+                                else if((searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].payee[x]==_payee){
+                                    
+                                    (searchHistory[DonationHistory[msg.sender].donorArray[d]]).searchinfo[msg.sender].value[x]+=DonationHistory[msg.sender].valueArray[d];
+                                    break;
+                                }
+                        }
+                    
+                             
+                             
+                         m-= DonationHistory[msg.sender].valueArray[d];
+                         DonationHistory[msg.sender].valueArray[d]=0;
+                        
+                    }  
+                    
+                   
+                    
+                    
+                   
+               
+                
+                
+            }
+            
+            
+            
+        }
+       
+       
+    }    //募款人向受款人買物資
+       
+   
+    function getBuyList(address _fundraiser) public view returns (address[],uint[]){
+        for(uint i=0;i<donor.length;i++){
+            if(msg.sender!=donor[i] && i==(donor.length)-1)
+                revert("User is not a donor.");
+            else if(msg.sender == donor[i])
+                break;
+            
+        }
+        for(uint j=0;j<fundraiser.length;j++){
+            if(_fundraiser!=fundraiser[j] && j==(fundraiser.length)-1)
+                revert("please enter a fundraiser.");
+            else if(_fundraiser == fundraiser[j])
+                break;
+            
+        }
+        
+        for(uint k=0;k<BuyHistory[_fundraiser].payee.length;k++)
+            return (BuyHistory[_fundraiser].payee,BuyHistory[_fundraiser].values);
+    }//捐款人查詢某募款人的金錢流向(非單筆單筆紀錄 )(contract0202是一筆一筆紀錄)
+    
+   
+   function search (address _fundraiser) public view returns(uint){
+      return DonationHistory[_fundraiser].ledger[msg.sender];
+   }//捐款人查詢對某募款人捐了多少錢
+   
+   
+   
+    struct SearchInfo{
+        
+        address [] payee;
+        uint [] value;
+        }
+   
+    
+    struct ChooseFundraiser{
+        mapping(address =>SearchInfo)searchinfo;//address為想要查詢的募款人
+    }
+    
+    mapping(address=>ChooseFundraiser)searchHistory;//address為捐款人
+   function searchMyValue(address _fundraiser)public view returns(address[],uint[]){
+       
+       return (searchHistory[msg.sender].searchinfo[_fundraiser].payee,
+               searchHistory[msg.sender].searchinfo[_fundraiser].value);
+   }//捐款人查詢自己捐給某募款人的錢的流向
+        
+    
+   
+   
+   
+   
+}
