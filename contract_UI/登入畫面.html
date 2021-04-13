@@ -564,7 +564,7 @@ $("#donate").click(function () {
 
 });
 $("#getBuyList").click(function () {
-    var result = infoContract.methods.getBuyList($("#fundraiser").val()).call();
+    var result = infoContract.methods.getBuyList($("#fundraiser").val()).call({ from: $(" #address").val()});
 	result.then(function(value){
 		//alert("此募款人的金流:"+JSON.stringify(value) );
 				document.body.appendChild(document.createElement('p'));
@@ -574,7 +574,7 @@ $("#getBuyList").click(function () {
 			})
 });
 $("#getTotalValue").click(function () {
-    var result = infoContract.methods.getTotalValue($("#fundraiser").val()).call();
+    var result = infoContract.methods.getTotalValue($("#fundraiser").val()).call({ from: $(" #address").val()});
 	result.then(function(value){
 				//document.write("此募款人募到的總額為:",value);
                 //alert("此募款人募到的總額為:"+ value/Math.pow(10,18)+ "  ether");
