@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,13 +37,13 @@
 				<button class="button1"><a href="申請.html">完成</a></button>
 				
 	<script>
-		if (typeof web3 !== 'undefined') {
-			web3 = new Web3(web3.currentProvider);
-		}
-		else {
-			// set the provider you want from Web3.providers
-			web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
-		}
+	if (window.ethereum) {
+    	web3 = new Web3(window.ethereum);
+    	window.ethereum.enable();
+	}
+	else {
+    	web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.50.75:8545"));
+	}
 		var infoContract = new web3.eth.Contract([
 	{
 		"constant": false,
@@ -324,7 +325,7 @@
 		"stateMutability": "payable",
 		"type": "function"
 	}
-], '0x77AeF511d582B1cBFD363E43D3f1F566AC97980F');
+], '0x21D9Bfa7BfdbB8B057e2ebCc5f49B1B808Bc3dBc');
 
 
 
@@ -343,3 +344,5 @@
 </body>
 
 </html>
+
+>>>>>>> Stashed changes
