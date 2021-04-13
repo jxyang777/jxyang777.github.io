@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <!DOCTYPE html>
 <html lang="en">
 
@@ -343,3 +344,350 @@
 </body>
 
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>捐款資金流向追蹤系統</title>
+    <link href='註冊角色_donor.css' rel='stylesheet' type='text/css'>
+	<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+</head>
+<body>
+    <div class="head1">申請帳號密碼</div>
+    <div class="box">
+	<form onsubmit="alert('表單送出');">
+	<label for="address">帳號</label>
+	<br>
+	<input type="text" required pattern="[0-9a-zA-Z]{42,}" id="address" name="address" placeholder="EX:0x5FC953397D6060E157d718eC64822dCe1314eC44" name="帳號">
+	<span class="ok">ok</span>
+	<br>
+	<label for="password" class="col-lg-2 control-label">密碼</label>
+	<br>
+	<input type="password" required pattern="[0-9a-zA-Z]{10,12}" name="password" id="password" placeholder="密碼" name="密碼">
+	<span class="ok">ok</span>
+	<br>
+	</form>
+	<br>
+				<button id="signUpDonor">註冊為donor</button>
+				
+				<br>
+				<br>
+                <br>
+                <br>
+                <button onclick="history.back()" class="button1"><a href="三方註冊畫面.html">Back</a></button>
+				<button class="button1"><a href="申請.html">完成</a></button>
+				
+	<script>
+	if (window.ethereum) {
+    	web3 = new Web3(window.ethereum);
+    	window.ethereum.enable();
+	}
+	else {
+    	web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.50.75:8545"));
+	}
+		var infoContract = new web3.eth.Contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "donate",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"name": "_phoneNumber",
+				"type": "string"
+			},
+			{
+				"name": "_email",
+				"type": "string"
+			}
+		],
+		"name": "signUpFundraiser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "searchMyValue",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			},
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "getBuyList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			},
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getDonorList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "signUpDonor",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"name": "_phoneNumber",
+				"type": "string"
+			},
+			{
+				"name": "_email",
+				"type": "string"
+			}
+		],
+		"name": "signUpPayee",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "search",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_fundraiser",
+				"type": "address"
+			}
+		],
+		"name": "getTotalValue",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "fundraiserList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "payeeList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "verify",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "donorList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_funOrPayee",
+				"type": "address"
+			}
+		],
+		"name": "showFunOrPayeeInfo",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_payee",
+				"type": "address"
+			}
+		],
+		"name": "buy",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	}
+], '0x77AeF511d582B1cBFD363E43D3f1F566AC97980F');
+
+
+
+		$("#signUpDonor").click(function () {
+			var result=infoContract.methods.signUpDonor($("#password").val()).send({ from: $("#address").val() , gas:500000 });
+			result.catch(err=>{
+				alert("註冊失敗!" + err);
+			})
+			result.then(function(){
+				alert("註冊成功!");
+			})
+		});
+
+	</script>
+    </div>
+</body>
+
+</html>
+>>>>>>> Stashed changes
