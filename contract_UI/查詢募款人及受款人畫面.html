@@ -41,17 +41,16 @@
                 <br>
                 <br>
                 <br>
-                <button onclick="history.back()" class="button1"><a href="index.html">Back</a></button>
+                <button onclick="history.back()" class="button1"><a href="申請.html">Back</a></button>
 				
 				
 	<script>
-		if (window.ethereum) {
-			web3 = new Web3(window.ethereum);
-		    window.ethereum.enable();
+		if (typeof web3 !== 'undefined') {
+			web3 = new Web3(web3.currentProvider);
 		}
 		else {
 			// set the provider you want from Web3.providers
-			web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.50.75:8545"));
+			web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
 		}
 		var infoContract = new web3.eth.Contract([
 	{
@@ -334,7 +333,7 @@
 		"stateMutability": "payable",
 		"type": "function"
 	}
-], "0x21D9Bfa7BfdbB8B057e2ebCc5f49B1B808Bc3dBc");
+], '0x77AeF511d582B1cBFD363E43D3f1F566AC97980F');
 
         $("#fundraiserList").click(function () {
 			var result = infoContract.methods.fundraiserList().call();
@@ -377,7 +376,7 @@
 				//alert("blockInfo:" + JSON.stringify(value))
 				document.body.appendChild(document.createElement('p'));
 				document.querySelector("body p:last-child").id="jstext";
-				document.querySelector("#jstext").innerHTML ="此Block的資訊:" + "<br>" +JSON.stringify(value)  ;
+				document.querySelector("#jstext").innerHTML ="此Block的資訊:" + "<br>" +JSON.stringify(value) ;
 				
 			})
 		});

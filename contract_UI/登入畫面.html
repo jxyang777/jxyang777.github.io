@@ -122,6 +122,11 @@ form>input:invalid+.ok{
 display: none;
 
 }
+#jstext{
+    text-align:center;
+    color:#743A3A;
+    background-color:wheat ;
+}
 		
   </style>
 </head>
@@ -166,7 +171,6 @@ display: none;
 <br/>
 <br/>
 
-<button id="showFunOrPayeeInfo" >查看此募款人基本資料</button>
 <button id="donate" >捐款給此募款人</button>
 <button id="getBuyList" >查看此募款人金流</button>
 <button id="getTotalValue">查看此募款人募到的總額</button>
@@ -175,29 +179,34 @@ display: none;
 
 <button id="buy">匯款給此payee</button>
 <button id="getDonorList">查看捐款者名單</button>
+<br>
+<button id="fundraiserList">fundraiserList</button>
+<br>
+<button id="payeeList">payeeList</button>
+<br>
+<button id="showFunOrPayeeInfo" >查看此人基本資料</button>
 </div>
 <br/>
 <br/>
 
 
-<button onclick="history.back()" class="button1"><a href="index.html">Back</a></button>
+<button onclick="history.back()" class="button1"><a href="申請.html">Back</a></button>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script >
 
-	if (window.ethereum) {
-		web3 = new Web3(window.ethereum);
-		window.ethereum.enable();
-	}
-	else {
-		// set the provider you want from Web3.providers
-		web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.50.75:8545"));
-	}
+  if (typeof web3 !== 'undefined') {
+    web3 = new Web3(web3.currentProvider);
+  }
+  else {
+    // set the provider you want from Web3.providers
+    web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+  }
 
 
 
 
-	var infoContract = new web3.eth.Contract([
+  var infoContract = new web3.eth.Contract([
 	{
 		"constant": false,
 		"inputs": [
@@ -478,7 +487,7 @@ display: none;
 		"stateMutability": "payable",
 		"type": "function"
 	}
-], "0x21D9Bfa7BfdbB8B057e2ebCc5f49B1B808Bc3dBc");
+], '0x77AeF511d582B1cBFD363E43D3f1F566AC97980F');
 
 
 function donorHidden(){
@@ -493,6 +502,9 @@ function donorHidden(){
 	document.getElementById("search").style.display="none";
 	document.getElementById("searchMyValue").style.display="none";
 	document.getElementById("showFunOrPayeeInfo").style.display="none";
+	document.getElementById("fundraiserList").style.display="none";
+	document.getElementById("payeeList").style.display="none";
+	
 	
 }
 function fundraiserHidden(){
@@ -522,6 +534,8 @@ function donorShow(){
 	document.getElementById("fundraiser").style.display="block";
 	document.getElementById("value").style.display="block";
 	document.getElementById("head_login").style.display="none";
+	document.getElementById("fundraiserList").style.display="block";
+	document.getElementById("payeeList").style.display="block";
 	
 	
 	
@@ -536,6 +550,7 @@ function fundraiserShow(){
 	document.getElementById("buy").style.display="block";
 	document.getElementById("getDonorList").style.display="block";
     document.getElementById("head_login").style.display="none";
+	document.getElementById("payeeList").style.display="block";
 }
 function payeeShow(){
 	document.getElementById("head_payee").style.display="block";
@@ -607,16 +622,6 @@ $("#searchMyValue").click(function () {
 			})
   });
 
- $("#showFunOrPayeeInfo").click(function(){
-	var result=infoContract.methods.showFunOrPayeeInfo($("#fundraiser").val()).call();
-	result.then(function(value){
-				//document.write("此帳戶的資訊為:",JSON.stringify(value));
-                //alert("此帳戶的資訊為:"+JSON.stringify(value));
-				document.body.appendChild(document.createElement('p'));
-				document.querySelector("body p:last-child").id="jstext";
-				document.querySelector("#jstext").innerHTML ="此人的基本資料(名字/電話/EMAIL信箱):" + "<br>" +JSON.stringify(value)  ;
-			})
- });
 
 
 
@@ -644,9 +649,9 @@ $("#searchMyValue").click(function () {
   });
 
   
-//下列為三者共用的function(verify)
+//下列為三者共用的function(verify、fundraiserList、payeeList、showFunOrPayeeInfo)
 $("#verify").click(function(){
-  	var result = infoContract.methods.verify($("#password").val()).call({from: $("#address").val()});
+  	var result =infoContract.methods.verify($("#password").val()).call({from: $("#address").val()});
 	result.then(function(value){
 		
 		if(value =="donor"){
@@ -671,8 +676,39 @@ $("#verify").click(function(){
 		document.getElementById("okok").style.display="none";
 		document.getElementById("okok1").style.display="none";
 		
-	});
+	})
 });
+			$("#fundraiserList").click(function () {
+			var result = infoContract.methods.fundraiserList().call();
+			result.then(function(value){
+				//alert("募款人的address:"+value);
+				document.body.appendChild(document.createElement('p'));
+				document.querySelector("body p:last-child").id="jstext";
+				document.querySelector("#jstext").innerHTML ="Fundraiser address:" + "<br>" +value  ;
+			})
+		});
+        $("#payeeList").click(function () {
+			var result = infoContract.methods.payeeList().call();
+
+			result.then(function(value){
+				//alert("受款人的address:"+value);
+				document.body.appendChild(document.createElement('p'));
+				document.querySelector("body p:last-child").id="jstext";
+				document.querySelector("#jstext").innerHTML ="Payee address:" + "<br>" +value  ;
+			})
+			
+		});
+		 $("#showFunOrPayeeInfo").click(function(){
+			var result=infoContract.methods.showFunOrPayeeInfo($("#fundraiser").val()).call();
+			result.then(function(value){
+				//document.write("此帳戶的資訊為:",JSON.stringify(value));
+                //alert("此帳戶的資訊為:"+JSON.stringify(value));
+				document.body.appendChild(document.createElement('p'));
+				document.querySelector("body p:last-child").id="jstext";
+				document.querySelector("#jstext").innerHTML ="此人的基本資料(名字/電話/EMAIL信箱):" + "<br>" +JSON.stringify(value)  ;
+			})
+ });
+
 
 </script>
 </div>
